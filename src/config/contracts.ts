@@ -5,10 +5,12 @@ export const CONFIG = {
   
   // Contract addresses from deployments/testnet.json
   addresses: {
-    tokenA: "0xcB340aB3c8e00886C5DBF09328D50af6D40B9EEb",
-    tokenB: "0x8108c36844Faf04C091973E95aE2B725cdCb55cC", 
-    mathEngine: "0x43aD2ef2fA35F2DE88E0E137429b8f6F4AeD65a2",
-    basicAMM: "0x1f9483387E54577aAD7E8145E99d38D4722eaCFD",
+    tokenA: "0xa37f1A5eedfb1D4e81AbE78c4B4b28c91744D1ab",
+    tokenB: "0x3785F7f6046f4401b6a7cC94397ecb42A26C7fD5",
+    tokenC: "0xcB340aB3c8e00886C5DBF09328D50af6D40B9EEb",
+    tokenD: "0x8108c36844Faf04C091973E95aE2B725cdCb55cC", 
+    mathEngine: "0x43aD2ef2fA35F2DE88E0E137429b8f6F4AeD65a2", // TODO: change to math engine address
+    basicAMM: "0x7db6EB857638220138dDe7E4c02E1D66E54Bd628",
     enhancedAMM: "0x3Ac977b824042344324C16bc0EA4B02396d94417",
   },
   
