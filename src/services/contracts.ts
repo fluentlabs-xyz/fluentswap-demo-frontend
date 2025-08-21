@@ -18,55 +18,12 @@ async function loadABI(contractName: string): Promise<any[]> {
     console.log(`Successfully loaded ABI for ${contractName} with ${abi.length} functions`);
     return abi;
   } catch (error) {
-    console.warn(`Warning: Could not load ABI for ${contractName}: ${error}`);
-    console.log(`Falling back to minimal ABI for ${contractName}`);
-    // Fallback to minimal ABIs if loading fails
-    return getFallbackABI(contractName);
+    console.error(`Failed to load ABI for ${contractName}: ${error}`);
+    throw new Error(`Critical: Unable to load contract ABI for ${contractName}. Build artifacts are required.`);
   }
 }
 
-// Fallback minimal ABIs in case dynamic loading fails
-function getFallbackABI(contractName: string): any[] {
-  switch (contractName) {
-    case 'ERC20':
-      return [
-        'function balanceOf(address owner) view returns (uint256)',
-        'function transfer(address to, uint256 amount) returns (bool)',
-        'function approve(address spender, uint256 amount) returns (bool)',
-        'function allowance(address owner, address spender) view returns (uint256)',
-        'function symbol() view returns (string)',
-        'function name() view returns (string)',
-        'function decimals() view returns (uint8)'
-      ];
-    case 'BasicAMM':
-      return [
-        'function getReserves() view returns (uint256, uint256)',
-        'function totalSupply() view returns (uint256)',
-        'function balanceOf(address account) view returns (uint256)',
-        'function swap(address tokenIn, uint256 amountIn, uint256 amountOutMin, address to) returns (uint256 amountOut)',
-        'function addLiquidity(uint256 amount0Desired, uint256 amount1Desired, uint256 amount0Min, uint256 amount1Min, address to) returns (uint256 liquidity)',
-        'function removeLiquidity(uint256 liquidity, uint256 amount0Min, uint256 amount1Min, address to) returns (uint256 amount0, uint256 amount1)',
-        'function quote(uint256 amountA, uint256 reserveA, uint256 reserveB) pure returns (uint256 amountB)',
-        'function calculateSlippage(uint256 amountIn, uint256 reserveIn, uint256 reserveOut) pure returns (uint256 slippagePercent)'
-      ];
-    case 'EnhancedAMM':
-      return [
-        'function getReserves() view returns (uint256, uint256)',
-        'function totalSupply() view returns (uint256)',
-        'function balanceOf(address account) view returns (uint256)',
-        'function swapEnhanced(address tokenIn, uint256 amountIn, uint256 amountOutMin, address to) returns (uint256 amountOut)',
-        'function swap(address tokenIn, uint256 amountIn, uint256 amountOutMin, address to) returns (uint256 amountOut)',
-        'function addLiquidityEnhanced(uint256 amount0Desired, uint256 amount1Desired, uint256 amount0Min, uint256 amount1Min, address to) returns (uint256 liquidity)',
-        'function addLiquidity(uint256 amount0Desired, uint256 amount1Desired, uint256 amount0Min, uint256 amount1Min, address to) returns (uint256 liquidity)',
-        'function removeLiquidityEnhanced(uint256 liquidity, uint256 amount0Min, uint256 amount1Min, address to) returns (uint256 amount0, uint256 amount1)',
-        'function removeLiquidity(uint256 liquidity, uint256 amount0Min, uint256 amount1Min, address to) returns (uint256 amount0, uint256 amount1)',
-        'function calculateImpermanentLoss(uint256 initialPrice, uint256 currentPrice) returns (uint256 loss)',
-        'function getAmountOut(uint256 amountIn, address tokenIn) view returns (uint256 amountOut)'
-      ];
-    default:
-      return [];
-  }
-}
+
 
 // Contract Service
 class ContractService {
@@ -90,7 +47,8 @@ class ContractService {
       ]);
       console.log('All ABIs preloaded successfully');
     } catch (error) {
-      console.warn('Failed to preload some ABIs:', error);
+      console.error('Failed to preload ABIs:', error);
+      throw error; // Re-throw to fail fast
     }
   }
   
