@@ -1,0 +1,163 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  
+  body {
+    @apply bg-black min-h-screen;
+    background: #000000 !important;
+    color: #ffffff !important;
+  }
+  
+  #root {
+    background: #000000 !important;
+  }
+  
+  * {
+    color: inherit;
+  }
+  
+  .text-white {
+    color: #ffffff !important;
+  }
+  
+  .text-gray-400 {
+    color: #9ca3af !important;
+  }
+  
+  .text-gray-300 {
+    color: #d1d5db !important;
+  }
+}
+
+@layer components {
+  .btn-gradient {
+    @apply bg-brand-mystic text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-mystic-start/20 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100;
+  }
+  
+  .btn-gradient-secondary {
+    @apply bg-brand-aurora text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-aurora-start/20 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100;
+  }
+  
+  .card-base {
+    position: relative;
+    @apply rounded-2xl p-6;
+    background: #111111;
+  }
+  
+  .card-gradient {
+    @apply card-base;
+  }
+  
+  .card-gradient::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    padding: 2px;
+    background: linear-gradient(135deg, #FF8FDA, #3700FF, #5011FF, #32FE6B);
+    border-radius: inherit;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: xor;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    pointer-events: none;
+    z-index: 1;
+  }
+  
+  .card-gradient > * {
+    position: relative;
+    z-index: 2;
+    pointer-events: auto;
+  }
+  
+  .card-white-border {
+    @apply card-base;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+  }
+  
+  .transaction-details-electric-meadow {
+    background: linear-gradient(135deg, rgba(206, 245, 100, 0.25) 0%, rgba(206, 245, 100, 0.20) 30%, rgba(206, 245, 100, 0.15) 50%, rgba(65, 0, 245, 0.25) 100%);
+    @apply p-3 rounded-lg;
+  }
+  
+  .optimal-amounts-aurora {
+    background: linear-gradient(135deg, rgba(50, 254, 107, 0.15), rgba(55, 0, 255, 0.15));
+    @apply p-3 rounded-lg;
+  }
+  
+  .troubleshooting-golden-sunrise {
+    background: linear-gradient(135deg, rgba(254, 105, 1, 0.15), rgba(254, 205, 7, 0.15));
+    @apply p-3 rounded-lg;
+  }
+  
+  .btn-remove-liquidity-hover {
+    @apply transition-all duration-300;
+  }
+  
+  .btn-remove-liquidity-hover:hover {
+    background: linear-gradient(135deg, #8D0042, #FF8FDA);
+    @apply text-white border-transparent;
+  }
+  
+  .pool-share-bar {
+    background: linear-gradient(135deg, rgba(254, 205, 7, 0.6), rgba(254, 105, 1, 0.6));
+    transition: all 0.3s ease;
+  }
+  
+  .pool-share-bar:hover {
+    background: linear-gradient(135deg, rgba(254, 205, 7, 1), rgba(254, 105, 1, 1));
+  }
+  
+  .token-a-bar {
+    background-color: rgba(50, 254, 107, 0.6);
+    transition: all 0.3s ease;
+  }
+  
+  .token-a-bar:hover {
+    background-color: rgba(50, 254, 107, 1);
+  }
+  
+  .token-b-bar {
+    background-color: rgba(255, 141, 218, 0.6);
+    transition: all 0.3s ease;
+  }
+  
+  .token-b-bar:hover {
+    background-color: rgba(255, 141, 218, 1);
+  }
+  
+  .input-gradient {
+    @apply bg-gray-900 border border-gray-600 rounded-xl px-4 py-3 transition-all duration-200;
+    color: #ffffff !important;
+  }
+  
+  .input-gradient::placeholder {
+    color: #9ca3af !important;
+  }
+  
+  .input-gradient:focus {
+    @apply border-mystic-start ring-2 ring-mystic-start/30;
+    color: #ffffff !important;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-brand-mystic;
+  }
+  
+  .text-gradient-aurora {
+    @apply bg-clip-text text-transparent bg-brand-aurora;
+  }
+  
+  .animate-gradient-x {
+    animation: gradient-x 8s ease infinite;
+    background-size: 200% 200%;
+  }
+}
