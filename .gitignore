@@ -13,8 +13,6 @@ dist
 dist-ssr
 *.local
 
-# Contract artifacts (copied from root out/ directory)
-public/out/
 
 # Editor directories and files
 .vscode/*
