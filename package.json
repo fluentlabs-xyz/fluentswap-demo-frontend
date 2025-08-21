@@ -4,10 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "predev": "mkdir -p public/out && cp -r ../out/* public/out/",
-    "dev": "npm run predev && vite",
-    "prebuild": "mkdir -p public/out && cp -r ../out/* public/out/",
-    "build": "npm run prebuild && tsc -b && vite build",
+    "dev": "vite",
+    "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },

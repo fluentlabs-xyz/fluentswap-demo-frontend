@@ -198,12 +198,28 @@ class ContractService {
   async addLiquidity(params: AddLiquidityParams, ammType: typeof AMMType[keyof typeof AMMType], useEnhanced: boolean = false, gasLimit?: number): Promise<ethers.ContractTransaction> {
     const ammContract = await this.getAMMContract(ammType, true);
     
+    console.log('=== CONTRACT SERVICE: addLiquidity ===');
+    console.log('AMM Type:', ammType);
+    console.log('Use Enhanced:', useEnhanced);
+    console.log('Gas Limit:', gasLimit);
+    console.log('Contract Address:', ammContract.address);
+    console.log('Params:', {
+      tokenA: params.tokenA.symbol,
+      tokenB: params.tokenB.symbol,
+      amountADesired: params.amountADesired.toString(),
+      amountBDesired: params.amountBDesired.toString(),
+      amountAMin: params.amountAMin.toString(),
+      amountBMin: params.amountBMin.toString(),
+      to: params.to
+    });
+    
     const txOptions: any = {};
     if (gasLimit) {
       txOptions.gasLimit = gasLimit;
     }
     
     if (ammType === AMMType.ENHANCED && useEnhanced) {
+      console.log('Calling addLiquidityEnhanced...');
       return await ammContract.addLiquidityEnhanced(
         params.amountADesired,
         params.amountBDesired,
@@ -213,6 +229,15 @@ class ContractService {
         txOptions
       );
     } else {
+      console.log('Calling addLiquidity...');
+      console.log('Final parameters being sent:');
+      console.log('  amountADesired:', params.amountADesired.toString(), '(hex:', params.amountADesired.toHexString(), ')');
+      console.log('  amountBDesired:', params.amountBDesired.toString(), '(hex:', params.amountBDesired.toHexString(), ')');
+      console.log('  amountAMin:', params.amountAMin.toString(), '(hex:', params.amountAMin.toHexString(), ')');
+      console.log('  amountBMin:', params.amountBMin.toString(), '(hex:', params.amountBMin.toHexString(), ')');
+      console.log('  to:', params.to);
+      console.log('  txOptions:', txOptions);
+      
       return await ammContract.addLiquidity(
         params.amountADesired,
         params.amountBDesired,

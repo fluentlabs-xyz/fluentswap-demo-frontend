@@ -148,6 +148,12 @@ export const LiquidityInterface: React.FC = () => {
       
       // For debugging
       console.log('Pool reserves:', { reserve0, reserve1 });
+      console.log('Pool reserves (raw):', {
+        reserve0Raw: currentPool.reserves.reserve0.toString(),
+        reserve1Raw: currentPool.reserves.reserve1.toString(),
+        reserve0Formatted: formatEther(currentPool.reserves.reserve0),
+        reserve1Formatted: formatEther(currentPool.reserves.reserve1)
+      });
       console.log('Input token:', inputToken.symbol, 'Amount:', inputAmount);
       console.log('Calculated token:', calculatedToken.symbol);
       console.log('Pool token0:', currentPool.token0.symbol, currentPool.token0.address);
@@ -177,11 +183,23 @@ export const LiquidityInterface: React.FC = () => {
         return null;
       }
       
-      // Calculate the ratio between the calculated token's reserve and input token's reserve
+            // Calculate the ratio between the calculated token's reserve and input token's reserve
       const ratio = calculatedReserve / inputReserve;
       const calculatedAmount = inputAmount * ratio;
       
       console.log('Using exact mapping - ratio:', ratio, 'calculated amount:', calculatedAmount);
+      console.log('Input amount:', inputAmount, 'Type:', typeof inputAmount);
+      console.log('Ratio:', ratio, 'Type:', typeof ratio);
+      console.log('Calculated amount (raw):', calculatedAmount, 'Type:', typeof calculatedAmount);
+      console.log('Calculated amount (toFixed(6)):', calculatedAmount.toFixed(6));
+      console.log('Calculated amount (toString()):', calculatedAmount.toString());
+      console.log('Calculated amount (locale):', calculatedAmount.toLocaleString());
+      console.log('Calculated amount (en-US):', calculatedAmount.toLocaleString('en-US'));
+      console.log('Browser locale:', navigator.language);
+      
+      // Check if the calculation is producing the expected result
+      console.log('Expected: inputAmount * ratio =', inputAmount, '*', ratio, '=', inputAmount * ratio);
+      console.log('Actual calculatedAmount:', calculatedAmount);
       
       // Return the amounts in the correct order
       if (inputToken.address.toLowerCase() === currentPool.token0.address.toLowerCase()) {
@@ -284,11 +302,27 @@ export const LiquidityInterface: React.FC = () => {
   };
   
   const handleAddLiquidity = async () => {
-    if (!wallet.isConnected || !tokenA || !tokenB) return;
+    console.log('🚀 FUNCTION CALLED! handleAddLiquidity is executing...');
+    console.log('=== HANDLE ADD LIQUIDITY START ===');
+    console.log('wallet.isConnected:', wallet.isConnected);
+    console.log('tokenA:', tokenA?.symbol);
+    console.log('tokenB:', tokenB?.symbol);
+    
+    if (!wallet.isConnected || !tokenA || !tokenB) {
+      console.log('Early return: wallet not connected or tokens missing');
+      return;
+    }
     
     // For Basic AMM: validate input amount and use calculated amount
     if (selectedAMM === AMMType.BASIC) {
-      if (!amountA || !basicAmounts) return;
+      console.log('=== BASIC AMM MODE ===');
+      console.log('amountA:', amountA);
+      console.log('basicAmounts:', basicAmounts);
+      
+      if (!amountA || !basicAmounts) {
+        console.log('Early return: amountA or basicAmounts missing');
+        return;
+      }
       
       // Validate input amount
       const inputAmountNum = parseFloat(amountA);
@@ -299,6 +333,10 @@ export const LiquidityInterface: React.FC = () => {
       
       // Check if user has sufficient balance for input token
       const inputTokenBalance = tokenBalances.find(tb => tb.token.address === inputToken?.address);
+      console.log('=== BALANCE CHECK ===');
+      console.log('Input token balance:', inputTokenBalance ? parseFloat(inputTokenBalance.formatted) : 'NOT_FOUND');
+      console.log('Required input amount:', inputAmountNum);
+      
       if (inputTokenBalance && inputAmountNum > parseFloat(inputTokenBalance.formatted)) {
         setError({ hasError: true, message: `Insufficient ${inputToken.symbol} balance. You have ${parseFloat(inputTokenBalance.formatted).toFixed(4)} but trying to add ${inputAmountNum}` });
         return;
@@ -306,6 +344,9 @@ export const LiquidityInterface: React.FC = () => {
       
       // Check if user has sufficient balance for calculated token
       const calculatedTokenBalance = tokenBalances.find(tb => tb.token.address === calculatedToken?.address);
+      console.log('Calculated token balance:', calculatedTokenBalance ? parseFloat(calculatedTokenBalance.formatted) : 'NOT_FOUND');
+      console.log('Required calculated amount:', basicAmounts.amount1);
+      
       if (calculatedTokenBalance && basicAmounts.amount1 > parseFloat(calculatedTokenBalance.formatted)) {
         setError({ hasError: true, message: `Insufficient ${calculatedToken.symbol} balance. You have ${parseFloat(calculatedTokenBalance.formatted).toFixed(4)} but need ${basicAmounts.amount1.toFixed(4)}` });
         return;
@@ -316,20 +357,96 @@ export const LiquidityInterface: React.FC = () => {
         setIsProcessing(true);
         setLoading({ isLoading: true, message: 'Adding liquidity...' });
         
-        const amountABN = parseEther(amountA);
-        const amountBBN = parseEther(basicAmounts.amount1.toString());
+        // Debug logging
+        console.log('=== DEBUG: Adding Liquidity ===');
+        console.log('Input amount (string):', amountA);
+        console.log('Calculated amount (number):', basicAmounts.amount1);
+        console.log('Calculated amount (toString):', basicAmounts.amount1.toString());
+        console.log('Calculated amount (toFixed(6)):', basicAmounts.amount1.toFixed(6));
+        
+        // Check the exact string being passed to parseEther
+        const amountAString = amountA;
+        const amountBString = basicAmounts.amount1.toString();
+        
+        console.log('=== STRING ANALYSIS ===');
+        console.log('Amount A string:', amountAString, 'Type:', typeof amountAString, 'Length:', amountAString.length);
+        console.log('Amount B string:', amountBString, 'Type:', typeof amountBString, 'Length:', amountBString.length);
+        console.log('Amount A contains comma:', amountAString.includes(','));
+        console.log('Amount B contains comma:', amountBString.includes(','));
+        console.log('Amount A contains period:', amountAString.includes('.'));
+        console.log('Amount B contains period:', amountBString.includes('.'));
+        
+        // Check if basicAmounts has been modified
+        console.log('=== BASIC AMOUNTS CHECK ===');
+        console.log('basicAmounts.amount1 (raw):', basicAmounts.amount1);
+        console.log('basicAmounts.amount1 (typeof):', typeof basicAmounts.amount1);
+        console.log('basicAmounts.amount1 (toString):', basicAmounts.amount1.toString());
+        console.log('basicAmounts.amount1 (toFixed(6)):', basicAmounts.amount1.toFixed(6));
+        
+        console.log('=== ABOUT TO CALL PARSE ETHER ===');
+        console.log('Calling parseEther for amountAString:', amountAString);
+        console.log('Calling parseEther for amountBString:', amountBString);
+        
+        let amountABN, amountBBN;
+        try {
+          console.log('Parsing amountAString...');
+          amountABN = parseEther(amountAString);
+          console.log('Successfully parsed amountA:', amountABN.toString());
+          
+          console.log('Parsing amountBString...');
+          amountBBN = parseEther(amountBString);
+          console.log('Successfully parsed amountB:', amountBBN.toString());
+        } catch (error) {
+          console.error('ERROR in parseEther:', error);
+          console.error('amountAString:', amountAString);
+          console.error('amountBString:', amountBString);
+          throw error;
+        }
+        
+        // Test parseEther with different formats
+        console.log('=== PARSE ETHER TEST ===');
+        try {
+          console.log('parseEther("15000"):', parseEther("15000").toString());
+          console.log('parseEther("15000.0"):', parseEther("15000.0").toString());
+          console.log('parseEther("15000000000"):', parseEther("15000000000").toString());
+        } catch (error) {
+          console.error('ERROR in parseEther test:', error);
+        }
+        
+        // Check if the calculated amount string contains commas
+        const calculatedAmountStr = basicAmounts.amount1.toString();
+        console.log('Calculated amount string:', calculatedAmountStr);
+        console.log('Contains comma:', calculatedAmountStr.includes(','));
+        console.log('Contains period:', calculatedAmountStr.includes('.'));
+        
+        console.log('Amount A (BigNumber):', amountABN.toString());
+        console.log('Amount B (BigNumber):', amountBBN.toString());
+        console.log('Amount A (hex):', amountABN.toHexString());
+        console.log('Amount B (hex):', amountBBN.toHexString());
         
         // Use 5% slippage for Basic AMM
         const amountAMin = amountABN.mul(95).div(100);
         const amountBMin = amountBBN.mul(95).div(100);
         
+        console.log('Amount A Min (BigNumber):', amountAMin.toString());
+        console.log('Amount B Min (BigNumber):', amountBMin.toString());
+        
         // Check and approve tokens if needed
         const ammAddress = '0x1f9483387E54577aAD7E8145E99d38D4722eaCFD';
+        
+        console.log('Input token:', inputToken.symbol, inputToken.address);
+        console.log('Calculated token:', calculatedToken.symbol, calculatedToken.address);
+        console.log('AMM Address:', ammAddress);
         
         const [allowanceA, allowanceB] = await Promise.all([
           contractService.getTokenAllowance(inputToken.address, wallet.address!, ammAddress),
           contractService.getTokenAllowance(calculatedToken.address, wallet.address!, ammAddress)
         ]);
+        
+        console.log('Token A Allowance:', allowanceA.toString());
+        console.log('Token B Allowance:', allowanceB.toString());
+        console.log('Needs A approval:', allowanceA.lt(amountABN));
+        console.log('Needs B approval:', allowanceB.lt(amountBBN));
         
         if (allowanceA.lt(amountABN)) {
           const approveTx = await contractService.approveToken(
@@ -350,6 +467,25 @@ export const LiquidityInterface: React.FC = () => {
         }
         
         // Add liquidity with fixed gas limit
+        console.log('=== Calling addLiquidity ===');
+        console.log('Parameters:');
+        console.log('  tokenA:', inputToken.symbol, inputToken.address);
+        console.log('  tokenB:', calculatedToken.symbol, calculatedToken.address);
+        console.log('  amountADesired:', amountABN.toString());
+        console.log('  amountBDesired:', amountBBN.toString());
+        console.log('  amountAMin:', amountAMin.toString());
+        console.log('  amountBMin:', amountBMin.toString());
+        console.log('  to:', wallet.address);
+        console.log('  selectedAMM:', selectedAMM);
+        console.log('  gasLimit: 500000');
+        
+        console.log('=== ABOUT TO SEND TRANSACTION ===');
+        console.log('Contract call parameters:');
+        console.log('  amountADesired (hex):', amountABN.toHexString());
+        console.log('  amountBDesired (hex):', amountBBN.toHexString());
+        console.log('  amountAMin (hex):', amountAMin.toHexString());
+        console.log('  amountBMin (hex):', amountBMin.toHexString());
+        
         const liquidityTx = await contractService.addLiquidity({
           tokenA: inputToken,
           tokenB: calculatedToken,
@@ -972,8 +1108,14 @@ export const LiquidityInterface: React.FC = () => {
               </>
             )}
             
+
+            
             <Button
-              onClick={handleAddLiquidity}
+              onClick={() => {
+                console.log('🎯 BUTTON CLICKED!');
+                console.log('About to call handleAddLiquidity...');
+                handleAddLiquidity();
+              }}
               disabled={!wallet.isConnected || 
                 (!isAdvancedMode ? (!amountA || !basicAmounts) : (!amountA || !amountB)) || 
                 isProcessing}
