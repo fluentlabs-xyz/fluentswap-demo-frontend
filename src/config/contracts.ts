@@ -10,7 +10,7 @@ export const CONFIG = {
     tokenC: "0xcB340aB3c8e00886C5DBF09328D50af6D40B9EEb",
     tokenD: "0x8108c36844Faf04C091973E95aE2B725cdCb55cC", 
     mathEngine: "0x43aD2ef2fA35F2DE88E0E137429b8f6F4AeD65a2", // TODO: change to math engine address
-    basicAMM: "0x7db6EB857638220138dDe7E4c02E1D66E54Bd628",
+    basicAMM: "0x8ff396af8BdEF1d23d7a7363CFc81Ed604eeB399",
     enhancedAMM: "0x3Ac977b824042344324C16bc0EA4B02396d94417",
   },
   
