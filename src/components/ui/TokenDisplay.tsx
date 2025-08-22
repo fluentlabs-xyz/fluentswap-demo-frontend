@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSingleTokenMetadata, useMultipleTokenMetadata } from '../../hooks/useTokenMetadata';
 import { formatUnits } from '../../services/contracts';
+import { IMAGE_PATHS } from '../../utils/paths';
 
 interface TokenDisplayProps {
   address: string;
@@ -50,7 +51,7 @@ export const TokenDisplay: React.FC<TokenDisplayProps> = ({
             onError={(e) => {
               // Fallback to default logo on error
               const target = e.target as HTMLImageElement;
-              target.src = '/img/default-token.svg';
+              target.src = IMAGE_PATHS.DEFAULT_TOKEN();
             }}
           />
         </div>

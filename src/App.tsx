@@ -7,6 +7,7 @@ import { Card, Button, Notification } from './components/ui';
 import { useAppStore } from './store';
 import { AMMType } from './config/contracts';
 import { abiDebugger } from './utils/abiDebugger';
+import { IMAGE_PATHS } from './utils/paths';
 
 function App() {
   const { 
@@ -34,7 +35,7 @@ function App() {
           <div className="animate-pulse">
             <div className="w-24 h-24 rounded-2xl bg-brand-mystic mx-auto mb-4 flex items-center justify-center overflow-hidden">
               <img 
-                src="/img/fluent.png" 
+                src={IMAGE_PATHS.FLUENT_LOGO()}
                 alt="Fluent Logo" 
                 className="w-full h-full object-cover"
               />

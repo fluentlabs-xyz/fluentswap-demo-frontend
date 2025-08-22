@@ -2,15 +2,14 @@ import { ethers, BigNumber, Contract } from 'ethers';
 import { CONFIG, AMMType } from '../config/contracts';
 import { web3Service } from './web3';
 import type { Token, SwapParams, SwapQuote, AddLiquidityParams, RemoveLiquidityParams, PoolReserves } from '../types';
+import { resolveABIPath } from '../utils/paths';
 
 // Dynamic ABI loading from build artifacts
 async function loadABI(contractName: string): Promise<any[]> {
   try {
     console.log(`Loading ABI for ${contractName}...`);
-    // In a browser environment, we need to fetch the JSON files
-    // The path should account for the Vite base path
-    const basePath = import.meta.env.BASE_URL || '/';
-    const fullPath = `${basePath}out/${contractName}.sol/${contractName}.json`;
+    // Use the path utility for consistent path resolution
+    const fullPath = resolveABIPath(contractName);
     console.log(`Attempting to fetch ABI from: ${fullPath}`);
     
     const response = await fetch(fullPath);

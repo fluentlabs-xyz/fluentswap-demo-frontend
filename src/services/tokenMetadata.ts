@@ -1,6 +1,7 @@
 import { ethers } from 'ethers';
 import { contractService } from './contracts';
 import { CONFIG } from '../config/contracts';
+import { IMAGE_PATHS } from '../utils/paths';
 
 export interface TokenMetadata {
   address: string;
@@ -22,19 +23,19 @@ export interface TokenMetadataCache {
 
 class TokenMetadataService {
   private cache: TokenMetadataCache = {};
-  private readonly DEFAULT_LOGO_URI = '/img/default-token.svg';
+  private readonly DEFAULT_LOGO_URI = IMAGE_PATHS.DEFAULT_TOKEN();
   private readonly KNOWN_TOKENS = {
     [CONFIG.addresses.tokenA]: {
       name: 'Token A',
       symbol: 'TKA',
       decimals: 18,
-      logoURI: '/img/token-a.svg'
+      logoURI: IMAGE_PATHS.TOKEN_A()
     },
     [CONFIG.addresses.tokenB]: {
       name: 'Token B', 
       symbol: 'TKB',
       decimals: 18,
-      logoURI: '/img/token-b.svg'
+      logoURI: IMAGE_PATHS.TOKEN_B()
     }
   };
   
@@ -266,7 +267,7 @@ export async function getTokenMetadataWithFallback(
       name: fallback?.name || 'Unknown Token',
       symbol: fallback?.symbol || '???',
       decimals: fallback?.decimals || 18,
-      logoURI: fallback?.logoURI || '/img/default-token.svg'
+              logoURI: fallback?.logoURI || IMAGE_PATHS.DEFAULT_TOKEN()
     };
   }
 }

@@ -1,5 +1,6 @@
 // ABI Debugging Utility
 // This file helps debug ABI loading issues
+import { resolveABIPath } from './paths';
 
 export interface ABIDebugInfo {
   contractName: string;
@@ -19,7 +20,7 @@ export class ABIDebugger {
   // Test ABI loading for a specific contract
   async testABILoading(contractName: string): Promise<ABIDebugInfo> {
     const basePath = import.meta.env.BASE_URL || '/';
-    const fullPath = `${basePath}out/${contractName}.sol/${contractName}.json`;
+    const fullPath = resolveABIPath(contractName);
     
     const debugInfo: ABIDebugInfo = {
       contractName,

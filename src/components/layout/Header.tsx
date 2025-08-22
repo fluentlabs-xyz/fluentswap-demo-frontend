@@ -2,6 +2,7 @@ import React from 'react';
 import { Button } from '../ui';
 import { useAppStore } from '../../store';
 import { AMMType } from '../../config/contracts';
+import { IMAGE_PATHS } from '../../utils/paths';
 
 export const Header: React.FC = () => {
   const { 
@@ -37,7 +38,7 @@ export const Header: React.FC = () => {
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 rounded-xl bg-brand-mystic flex items-center justify-center overflow-hidden">
               <img 
-                src="/img/fluent.png" 
+                src={IMAGE_PATHS.FLUENT_LOGO()}
                 alt="Fluent Logo" 
                 className="w-full h-full object-cover"
               />
