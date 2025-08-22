@@ -130,7 +130,7 @@ class TokenMetadataService {
         name: tokenInfo.name,
         symbol: tokenInfo.symbol,
         decimals: tokenInfo.decimals,
-        logoURI: this.getTokenLogoURI(tokenInfo.symbol),
+        logoURI: this.getTokenLogoURI(),
         totalSupply
       };
       
@@ -188,7 +188,7 @@ class TokenMetadataService {
     return { tokenA, tokenB };
   }
   
-  private getTokenLogoURI(symbol: string): string {
+  private getTokenLogoURI(): string {
     // You can implement custom logic here:
     // 1. Use a token logo API (e.g., Trust Wallet, CoinGecko)
     // 2. Map to local assets

@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { BigNumber } from 'ethers';
-import type { WalletState, Token, TokenBalance, PoolInfo, Transaction, AMMInfo, UserSettings, LoadingState, ErrorState, AMMType } from '../types';
-import { CONFIG, AMM_CONFIG } from '../config/contracts';
+import type { WalletState, TokenBalance, PoolInfo, Transaction, UserSettings, LoadingState, ErrorState, AMMType } from '../types';
+import { CONFIG } from '../config/contracts';
 import { AMMType as AMMTypeValues } from '../config/contracts';
 import { web3Service } from '../services/web3';
 import { contractService, formatUnits } from '../services/contracts';

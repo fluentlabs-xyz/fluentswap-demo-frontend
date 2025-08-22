@@ -108,8 +108,8 @@ export const TokenPairDisplay: React.FC<{
     );
   }
 
-  const tokenA = tokens[tokenAAddress]!;
-  const tokenB = tokens[tokenBAddress]!;
+  // const tokenA = tokens[tokenAAddress]!;
+  // const tokenB = tokens[tokenBAddress]!;
 
   return (
     <div className={`flex items-center space-x-4 ${className}`}>

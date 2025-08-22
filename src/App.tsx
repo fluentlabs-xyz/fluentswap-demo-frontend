@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import  { useEffect } from 'react';
 import { Layout } from './components/layout';
 import { SwapInterface } from './components/dex/SwapInterface';
 import { LiquidityInterface } from './components/dex/LiquidityInterface';
