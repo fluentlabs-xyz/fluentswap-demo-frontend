@@ -6,6 +6,7 @@ import { PoolInfo } from './components/dex/PoolInfo';
 import { Card, Button, Notification } from './components/ui';
 import { useAppStore } from './store';
 import { AMMType } from './config/contracts';
+import { abiDebugger } from './utils/abiDebugger';
 
 function App() {
   const { 
@@ -84,6 +85,36 @@ function App() {
               <Button variant="ghost" size="sm" onClick={clearError}>
                 Dismiss
               </Button>
+            </div>
+          </Card>
+        )}
+        
+        {/* Debug Tools - Only visible in development */}
+        {import.meta.env.DEV && (
+          <Card className="mb-6 border-blue-500/50 bg-blue-900/20">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-blue-400">Debug Tools</h3>
+                <p className="text-blue-300 mt-1">Test ABI loading and debug issues</p>
+              </div>
+              <div className="space-x-2">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => abiDebugger.testAllABIs()}
+                  className="text-blue-400 hover:text-blue-300"
+                >
+                  Test ABIs
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => console.log('Debug Info:', abiDebugger.exportDebugInfo())}
+                  className="text-blue-400 hover:text-blue-300"
+                >
+                  Export Debug
+                </Button>
+              </div>
             </div>
           </Card>
         )}

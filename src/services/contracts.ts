@@ -8,13 +8,24 @@ async function loadABI(contractName: string): Promise<any[]> {
   try {
     console.log(`Loading ABI for ${contractName}...`);
     // In a browser environment, we need to fetch the JSON files
-    // The path should be relative to the public directory or we need to import them
-    const response = await fetch(`/out/${contractName}.sol/${contractName}.json`);
+    // The path should account for the Vite base path
+    const basePath = import.meta.env.BASE_URL || '/';
+    const fullPath = `${basePath}out/${contractName}.sol/${contractName}.json`;
+    console.log(`Attempting to fetch ABI from: ${fullPath}`);
+    
+    const response = await fetch(fullPath);
     if (!response.ok) {
-      throw new Error(`Failed to load ABI for ${contractName}: ${response.statusText}`);
+      console.error(`HTTP ${response.status}: ${response.statusText} for ${fullPath}`);
+      throw new Error(`Failed to load ABI for ${contractName}: ${response.status} ${response.statusText}`);
     }
+    
     const artifact = await response.json();
     const abi = artifact.abi || [];
+    
+    if (!abi || abi.length === 0) {
+      throw new Error(`ABI for ${contractName} is empty or invalid`);
+    }
+    
     console.log(`Successfully loaded ABI for ${contractName} with ${abi.length} functions`);
     return abi;
   } catch (error) {
@@ -40,12 +51,30 @@ class ContractService {
   private async preloadABIs(): Promise<void> {
     try {
       console.log('Preloading contract ABIs...');
-      await Promise.all([
+      const results = await Promise.allSettled([
         this.getABI('ERC20'),
         this.getABI('BasicAMM'),
         this.getABI('EnhancedAMM')
       ]);
-      console.log('All ABIs preloaded successfully');
+      
+      let successCount = 0;
+      results.forEach((result, index) => {
+        const contractNames = ['ERC20', 'BasicAMM', 'EnhancedAMM'];
+        if (result.status === 'fulfilled') {
+          successCount++;
+          console.log(`✓ ${contractNames[index]} ABI loaded successfully`);
+        } else {
+          console.error(`✗ ${contractNames[index]} ABI failed to load:`, result.reason);
+        }
+      });
+      
+      if (successCount === 0) {
+        throw new Error('All ABIs failed to load. Application cannot function properly.');
+      } else if (successCount < results.length) {
+        console.warn(`${successCount}/${results.length} ABIs loaded successfully. Some functionality may be limited.`);
+      } else {
+        console.log('All ABIs preloaded successfully');
+      }
     } catch (error) {
       console.error('Failed to preload ABIs:', error);
       throw error; // Re-throw to fail fast
@@ -78,6 +107,19 @@ class ContractService {
     const abi = await loadABI(contractName);
     this.abiCache.set(contractName, abi);
     return abi;
+  }
+  
+  // Manually reload ABI (useful for debugging)
+  async reloadABI(contractName: string): Promise<any[]> {
+    console.log(`Manually reloading ABI for ${contractName}...`);
+    this.abiCache.delete(contractName);
+    return await this.getABI(contractName);
+  }
+  
+  // Clear ABI cache
+  clearABICache(): void {
+    this.abiCache.clear();
+    console.log('ABI cache cleared');
   }
   
   // Token Operations
